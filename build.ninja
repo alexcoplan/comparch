@@ -1,19 +1,44 @@
-rule cc
-  command = gcc -g -c -o $out $in
+cflags = -g
+cc = gcc
+as = as
 
-rule ld
-  command = gcc -o $out $in
+mips_tuple = mips64-linux-gnuabi64
+mips64_cc = ${mips_tuple}-gcc
+mips64_as = ${mips_tuple}-as
+
+rule cc
+  command = $cc $cflags -c -o $out $in
+
+rule link
+  command = $cc $ldflags -o $out $in
 
 rule as
-  command = as -o $out $in
+  command = $as $asflags -o $out $in
 
 rule test
   command = $in && touch $out
+
+rule test_qemu
+  command = qemu-$arch -L $sysroot $in && touch $out
 
 build build/x86/test_a7.o : cc a7/test_a7.c
 
 build build/x86/a7.o : as a7/x64_a7.s
 
-build build/x86/test_a7 : ld build/x86/test_a7.o build/x86/a7.o
+build build/x86/test_a7 : link build/x86/test_a7.o build/x86/a7.o
 
 build build/x86/test/a7.stamp : test build/x86/test_a7
+
+build build/mips/test_a7.o : cc a7/test_a7.c
+  cc = $mips64_cc
+
+build build/mips/a7.o : as a7/mips_a7.s
+  as = $mips64_as
+  asflags = -mips64r2
+
+build build/mips/test_a7 : link build/mips/a7.o build/mips/test_a7.o
+  cc = $mips64_cc
+
+build build/mips/test/a7.stamp : test_qemu build/mips/test_a7
+  arch = mips64
+  sysroot = /usr/mips64-linux-gnuabi64
