@@ -1,5 +1,5 @@
 # GAS => dest on RHS
-# base address in rax
+# base address in rdi
 
 .global exA7
 
