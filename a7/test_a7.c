@@ -20,10 +20,22 @@ int main(void)
     b[i] = i;
   }
 
+  for (unsigned i = 101; i < 250; i++) {
+    assert(a[i] == UINT64_MAX);
+    assert(b[i] == UINT64_MAX);
+    assert(c[i] == UINT64_MAX);
+  }
+
   exA7(mem);
 
   for (unsigned i = 0; i <= 100; i++) {
     assert(a[i] == b[i] + *c);
+  }
+
+  for (unsigned i = 101; i < 250; i++) {
+    assert(a[i] == UINT64_MAX);
+    assert(b[i] == UINT64_MAX);
+    assert(c[i] == UINT64_MAX);
   }
 
   printf("OK\n");
