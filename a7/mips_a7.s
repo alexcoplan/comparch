@@ -1,6 +1,19 @@
 # Exercise A.7 solution for MIPS
 
-.set mips64
+# GCC has the -mabicalls option enabled by default, but this is not the case in
+# mips64 GAS.
+#
+# A useful summary from Robert Watson is available here:
+# https://reviews.freebsd.org/D5565
+#
+# ABI calls provides a guarantee to callees that $t9 contains a pointer
+# to the current function, relative to which other pointers to data can be
+# calculated.
+#
+# So we include the directive below as gcc issues a warning if you link
+# abicalls code with non-abicalls code (and presumably it's not a great idea).
+.abicalls
+
 .global exA7
 
 # $a0 is the base address

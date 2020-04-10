@@ -34,7 +34,6 @@ build build/mips/test_a7.o : cc a7/test_a7.c
 
 build build/mips/a7.o : as a7/mips_a7.s
   as = $mips64_as
-  asflags = -mips64r2
 
 build build/mips/test_a7 : link build/mips/a7.o build/mips/test_a7.o
   cc = $mips64_cc
